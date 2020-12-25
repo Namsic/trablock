@@ -26,6 +26,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String _travelname = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,13 +77,20 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (BuildContext context){
               return AlertDialog(
                 title: Text('새 여행 만들기'),
-                content: Text('입력칸 추가예정'),
+                content: TextField(
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(hintText: '입력해 주세요'),
+                    onChanged: (String str) {
+                      setState(() => _travelname = str);
+                    },
+                ),//입력칸 추가완료
                 actions: <Widget>[
                   FlatButton(
                     child: Text("확인"),
                     onPressed: (){
                       setState(() {
-                        myTravelList.add(Travel("my_trablock"));
+                        myTravelList.add(Travel(_travelname));
                       });
                       Navigator.pop(context);
                     },
