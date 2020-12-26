@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trablock_app/buildPlan.dart';
 import './showPlanRoute.dart';
 
 final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         MyHomePage.routeName: (context) => MyHomePage(),
         ShowPlanRoute.routeName: (context) => ShowPlanRoute(),
+        BuildPlanRoute.routeName: (context) => BuildPlanRoute(),
       },
     );
   }
@@ -28,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _travelname = '';
+  String _travelName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Upadte the state of the app
                 // 기타 설정창으로 넘어가는 기능
-                Navigator.pop(context);
-
+                Navigator.pushNamed(context, BuildPlanRoute.routeName);
               },
             ),
 
@@ -84,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(hintText: '입력해 주세요'),
                     onChanged: (String str) {
-                      setState(() => _travelname = str);
+                      setState(() => _travelName = str);
                     },
                 ),//입력칸 추가완료
                 actions: <Widget>[
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: (){
                       Navigator.pop(context);
                       setState(() {
-                        myTravelList.add(Travel(_travelname));
+                        myTravelList.add(Travel(_travelName));
                       });
                     },
                   ),
