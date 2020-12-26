@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
 
@@ -27,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _travelname = '';
+  int _traveltime;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             barrierDismissible: false,
             builder: (BuildContext context){
               return AlertDialog(
-                title: Text('새 여행 만들기'),
+                title: Text('여행이름입력'),
                 content: TextField(
                     style: TextStyle(fontSize: 20, color: Colors.black),
                     textAlign: TextAlign.center,
@@ -89,10 +91,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   FlatButton(
                     child: Text("확인"),
                     onPressed: (){
-                      setState(() {
-                        myTravelList.add(Travel(_travelname));
-                      });
                       Navigator.pop(context);
+                      setState(() {
+                        myTravelList.add(Travel(_travelname, _traveltime));
+                      });
                     },
                   ),
                   FlatButton(
@@ -105,6 +107,42 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               );
             }
+          );
+          showDialog( // 여행기간을 입력받는 텍스트필드, _traveltime에 int로 들어감
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context){
+                return AlertDialog(
+                  title: Text('여행기간입력'),
+                  content: TextField(
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [WhitelistingTextInputFormatter(RegExp('[0-9]')),],
+                    decoration: InputDecoration(
+                      labelText: 'Type your Number',
+                      hintText: '4일',
+                    ),
+                    onChanged: (String str) {
+                      setState(() => _traveltime = str as int);
+                    },
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("확인"),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        "취소",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                );
+              },
           );
         },
         tooltip: '새 여행 시작',
@@ -172,7 +210,10 @@ class TravelListView extends StatelessWidget{
 
 class Travel {
   // 각각의 여행. 여러 개의 계획으로 구성되어 있(을 예정이)다.
+  // 여행의 이름, 여행기간을 갖고 있음.
   String title;
+  int traveltime;
 
-  Travel(this.title);
+  Travel(this.title, this.traveltime);
 }
+
