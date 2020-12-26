@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+main.dart : 메인페이지 구성파일
+showPlanRoute.dart : 계획 확인을 위한 클래스와 위젯 파일
+buildPlanRoute.dart : 계획 수정을 위한 클래스와 위젯 파일
+showMapRoute.dart : 여행루트 확인을 위한 지도 클래스와 위젯 파일
