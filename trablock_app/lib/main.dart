@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:trablock_app/Data.dart';
 import 'package:trablock_app/buildPlan.dart';
 import './showPlanRoute.dart';
-
-final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
 
 void main() => runApp(MyApp());
 

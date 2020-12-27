@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trablock_app/Data.dart';
 import 'package:trablock_app/showPlanRoute.dart';
 
 class BuildPlanRoute extends StatefulWidget {
@@ -10,31 +12,32 @@ class BuildPlanRoute extends StatefulWidget {
 class _BuildPlanRouteState extends State<BuildPlanRoute> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Draggable(
-          child: PlaceBlock(0),
-          feedback: PlaceBlock(1),
-        ),
-      ],
-    );
-  }
-}
-
-class PlaceBlock extends StatelessWidget {
-  final imageIndex;
-
-  PlaceBlock(this.imageIndex);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-        alignment: Alignment.center,
+    return Scaffold(
+      appBar: AppBar(),
+      body: Row(
         children: [
-          Image.asset('images/block' + imageIndex + '.png'),
-          Text('a'),
+          Expanded(
+            child: Center(child:GetWidget.blockColumn(desList: myDestinationList, interval: true)),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Draggable(
+                child: Card(child: Text('block'),),
+                feedback: Card(child: Text('block'),),
+                childWhenDragging: Container(),
+              ),
+              Draggable(
+                child: Card(child: Text('time'),),
+                feedback: Card(child: Text('time'),),
+              ),
+            ],
+          ),
         ],
+      ),
     );
   }
 }
+
+
 
