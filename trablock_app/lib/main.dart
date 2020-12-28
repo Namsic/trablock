@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trablock_app/buildPlanRoute.dart';
 import './showPlanRoute.dart';
 
 final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         MyHomePage.routeName: (context) => MyHomePage(),
         ShowPlanRoute.routeName: (context) => ShowPlanRoute(),
+        BuildPlanRoute.routeName: (context) => BuildPlanRoute(),
       },
     );
   }

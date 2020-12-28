@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import './buildPlanRoute.dart';
 
-List<Destination> myDestinationList = [];
+List<Days> myTravelDays = [];
 
 class ShowPlanRoute extends StatefulWidget {
   static final routeName = '/show';
@@ -17,8 +18,21 @@ class _ShowPlanRouteState extends State<ShowPlanRoute> {
     return Scaffold(
       appBar: AppBar(  // 계획 수정버튼 등 필요
         title: Text(_travel.title),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.edit),
+            tooltip : '여행 일정을 수정하기',
+            onPressed: (){
+              Navigator.pushNamed(
+                  context,
+                  BuildPlanRoute.routeName,
+                  arguments: myTravelDays
+              );
+            },
+          )
+        ],
       ),
-      body: Col,
+
     );
   }
 }
@@ -28,13 +42,4 @@ class Travel {
   String title;
 
   Travel(this.title);
-}
-
-class Destination {
-  // 각각의 여행지.
-  // 여행지의 길이는 특정한 설정이 없으면 1로 고정
-  String name;
-  int length = 1;
-
-  Destination(this.name);
 }
