@@ -148,5 +148,3 @@ class TravelListView extends StatelessWidget{
     );
   }
 }
-
-
