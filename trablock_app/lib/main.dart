@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
 
 // MyHomePage 대신 다른 이름 필요성 느낌
 class MyHomePage extends StatefulWidget {
+  int travelCount = 0;
   static final routeName = '/';
   @override
   _MyHomePageState createState() => _MyHomePageState();

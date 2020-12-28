@@ -3,7 +3,6 @@ import 'package:trablock_app/Data.dart';
 import 'package:trablock_app/EditPlan.dart';
 
 // 메인화면에서 각 계획 클릭시 나타날 화면. 작성된 계획을 보기 편하게 보여줘야 할듯
-List<Days> myTravelDays = [];
 
 class ShowPlanRoute extends StatefulWidget {
   static final routeName = '/show';
@@ -14,7 +13,7 @@ class ShowPlanRoute extends StatefulWidget {
 class _ShowPlanRouteState extends State<ShowPlanRoute> {
   List<String> pageview = ["1일차", "2일차", "3일차"];// String 리스트 대신 BlockTower의 리스트가 들어가 있어야 함.
   PageController controller;
-  int pageIndex = 0;
+  int pageInitIndex = 0;
   @override
   void initState() {
     controller = PageController(initialPage: 0, viewportFraction: 0.8);
@@ -36,14 +35,14 @@ class _ShowPlanRouteState extends State<ShowPlanRoute> {
               Navigator.pushNamed(
                   context,
                   EditPlanRoute.routeName,
-                  arguments: myTravelDays
+                  arguments: _travel,
               );
             },
           )
         ],
       ),
       body: IndexedStack(
-        index : pageIndex,
+        index : pageInitIndex,
         children: <Widget>[
           PageView.builder(
             itemBuilder: (context, page) {

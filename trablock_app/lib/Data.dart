@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
+
 final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
-final List<Destination> myDestinationList = [Destination('aaaa'), Destination('bbbb')];
+
 
 class Travel {
   // 각각의 여행. 여러 개의 여행지로 구성되어 있(을 예정이)다.
   String title;
-  List<Destination> _plan;
+  List<List<Destination>> days = [[Destination('aaaa'), Destination('bbbb')],[Destination('Seoul'),Destination('Busan')]];
+  int daysCount = 2;//여행 날짜를 추가하는 기능을 구현할 때 dayscount도 증가시켜줘야 함.
 
   Travel(this.title);
 }
@@ -23,4 +26,4 @@ class Days {
   List<Destination> todayDestinationList = [];
 }
 
-List<List<Destination>> dayList;
+List<List<Destination>> dayList = [];

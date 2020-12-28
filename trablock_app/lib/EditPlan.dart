@@ -11,7 +11,11 @@ class EditPlanRoute extends StatefulWidget {
 class _EditPlanRouteState extends State<EditPlanRoute> {
   @override
   Widget build(BuildContext context) {
-    List<Days> myTravelDays = ModalRoute.of(context).settings.arguments;
+    Travel _travel = ModalRoute.of(context).settings.arguments;
+    List<List<Destination>> myDayList = _travel.days;
+    int _travelterm = _travel.daysCount;
+    //List<Destination> myDestinationList = _travel.plan;// 각 여행마다 destinationList를 갖기 위해 변경
+    //여행 기간을 추가시키는 기능을 구현하기 위해서 travel.days와 travel.daysCount를 모두 변경시켜줘야 함.
     return Scaffold(
       appBar: AppBar(
         title: Text('일정수정'),
@@ -19,8 +23,20 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+           //IndexedStack(
+           //  index: dayIndex,
+           //  children: <Widget>[
+           //    PageView.builder(
+           //      itemBuilder: (context, page) {
+           //        return Expanded(
+           //          child: EditBlockTower(myDestinationList),
+           //        );
+           //      },
+           //    )
+           //  ],
+          // ),
           Expanded(
-            child: EditBlockTower(myDestinationList),
+            child: BuildDayPage(myDayList, _travelterm),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -41,6 +57,52 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
     );
   }
 }
+
+class BuildDayPage extends StatefulWidget {
+  //여행날짜와 여행지 리스트를 입력받으면 그에 해당하는 viewpage를 생성하는 클래스
+  //input : List<List<Destination>> 날짜별 여행지 목록, int 여행기간
+  //output : 좌우로 넘길 수 있는 ViewPage 위젯
+  final List<List<Destination>> dayList;
+  final int term;
+  BuildDayPage(this.dayList, this.term);
+
+  @override
+  _BuildDayPageState createState() => _BuildDayPageState();
+}
+
+class _BuildDayPageState extends State<BuildDayPage> {
+  PageController controller;
+  int pageIndex = 0;
+  @override
+  void initState() {
+    controller = PageController();
+    super.initState();
+  }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IndexedStack(
+      index: pageIndex,
+      children: <Widget>[
+        PageView.builder(
+          itemCount: widget.term,
+          physics: PageScrollPhysics(),
+          itemBuilder: (context, page) {
+            return Center(
+              child: EditBlockTower(widget.dayList[page])
+            );
+          },
+        )
+      ],
+    );
+  }
+}
+
 
 class EditBlockTower extends StatefulWidget {
   final List<Destination> desList;
@@ -80,16 +142,17 @@ class _EditBlockTowerState extends State<EditBlockTower> {
     List<Widget> result = [];
     _intervalList.clear();
 
+
     // 틈 위젯과 블럭 위젯 번갈아 입력력
    for(int i=0; i<widget.desList.length; i++){
       result.add(_makeInterval(index: i));
       result.add(_makeBlock(des: widget.desList[i]));
     }
-    result.add(_makeInterval(index: widget.desList.length));
+   result.add(_makeInterval(index: widget.desList.length));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: result,
+      children: result
     );
   }
 
