@@ -12,8 +12,8 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
   @override
   Widget build(BuildContext context) {
     Travel _travel = ModalRoute.of(context).settings.arguments;
-    List<List<Destination>> myDayList = _travel.days;
-    int _travelterm = _travel.daysCount;
+    //List<List<Destination>> myDayList = _travel.days;
+    //int _travelterm = _travel.daysCount;
     //List<Destination> myDestinationList = _travel.plan;// 각 여행마다 destinationList를 갖기 위해 변경
     //여행 기간을 추가시키는 기능을 구현하기 위해서 travel.days와 travel.daysCount를 모두 변경시켜줘야 함.
     return Scaffold(
@@ -36,7 +36,7 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
            //  ],
           // ),
           Expanded(
-            child: BuildDayPage(myDayList, _travelterm),
+            child: BuildDayPage(_travel.days),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,11 +60,11 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
 
 class BuildDayPage extends StatefulWidget {
   //여행날짜와 여행지 리스트를 입력받으면 그에 해당하는 viewpage를 생성하는 클래스
-  //input : List<List<Destination>> 날짜별 여행지 목록, int 여행기간
+  //input : List<List<Destination>> 날짜별 여행지 목록
   //output : 좌우로 넘길 수 있는 ViewPage 위젯
   final List<List<Destination>> dayList;
-  final int term;
-  BuildDayPage(this.dayList, this.term);
+  BuildDayPage(this.dayList);
+
 
   @override
   _BuildDayPageState createState() => _BuildDayPageState();
@@ -90,7 +90,7 @@ class _BuildDayPageState extends State<BuildDayPage> {
       index: pageIndex,
       children: <Widget>[
         PageView.builder(
-          itemCount: widget.term,
+          itemCount: widget.dayList.length,
           physics: PageScrollPhysics(),
           itemBuilder: (context, page) {
             return Center(
