@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:trablock_app/buildPlanRoute.dart';
-import './showPlanRoute.dart';
-
-final List<Travel> myTravelList = []; // 로컬 데이타베이스에서 불러올 예정
+import 'package:trablock_app/Data.dart';
+import 'package:trablock_app/EditPlan.dart';
+import 'package:trablock_app/showPlan.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +14,7 @@ class MyApp extends StatelessWidget {
       routes: {
         MyHomePage.routeName: (context) => MyHomePage(),
         ShowPlanRoute.routeName: (context) => ShowPlanRoute(),
-        BuildPlanRoute.routeName: (context) => BuildPlanRoute(),
+        EditPlanRoute.routeName: (context) => EditPlanRoute(),
       },
     );
   }
@@ -30,7 +28,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _travelname = '';
+  String _travelName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 // Upadte the state of the app
                 // 기타 설정창으로 넘어가는 기능
                 Navigator.pop(context);
-
               },
             ),
 
@@ -86,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(hintText: '입력해 주세요'),
                     onChanged: (String str) {
-                      setState(() => _travelname = str);
+                      setState(() => _travelName = str);
                     },
                 ),//입력칸 추가완료
                 actions: <Widget>[
@@ -95,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: (){
                       Navigator.pop(context);
                       setState(() {
-                        myTravelList.add(Travel(_travelname));
+                        myTravelList.add(Travel(_travelName));
                       });
                     },
                   ),
@@ -151,5 +148,3 @@ class TravelListView extends StatelessWidget{
     );
   }
 }
-
-
