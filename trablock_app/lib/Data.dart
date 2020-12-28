@@ -22,3 +22,5 @@ class Days {
   // 여행일정의 하루. 여행지의 배열을 갖고 있고, 사용자가 블럭을 추가하면 배열에 추가되는 기능 구현 필요
   List<Destination> todayDestinationList = [];
 }
+
+List<List<Destination>> dayList;

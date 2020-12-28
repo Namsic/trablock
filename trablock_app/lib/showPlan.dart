@@ -12,6 +12,15 @@ class ShowPlanRoute extends StatefulWidget {
 }
 
 class _ShowPlanRouteState extends State<ShowPlanRoute> {
+  List<String> pageview = ["1일차", "2일차", "3일차"];// String 리스트 대신 BlockTower의 리스트가 들어가 있어야 함.
+  PageController controller;
+  int pageIndex = 0;
+  @override
+  void initState() {
+    controller = PageController(initialPage: 0, viewportFraction: 0.8);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Travel _travel = ModalRoute.of(context).settings.arguments;
@@ -31,6 +40,23 @@ class _ShowPlanRouteState extends State<ShowPlanRoute> {
               );
             },
           )
+        ],
+      ),
+      body: IndexedStack(
+        index : pageIndex,
+        children: <Widget>[
+          PageView.builder(
+            itemBuilder: (context, page) {
+              return Center(
+                child: Container(
+                  color: Colors.amber,
+                  child: Text(pageview[page]),
+                ),
+              );
+            },
+            itemCount: 3,
+            controller: controller,
+          ),
         ],
       ),
     );
