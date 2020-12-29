@@ -68,7 +68,7 @@ class BuildDayPage extends StatefulWidget {
 
 class _BuildDayPageState extends State<BuildDayPage> {
   PageController controller;
-  int pageIndex = 0;
+  int pageStartIndex = 0;
   
   @override
   void initState() {
@@ -84,15 +84,17 @@ class _BuildDayPageState extends State<BuildDayPage> {
   @override
   Widget build(BuildContext context) {
     return IndexedStack(
-      index: pageIndex,
+      index: pageStartIndex,
       children: <Widget>[
         PageView.builder(
-          itemCount: widget.dayList.length,
+          itemCount: widget.dayList.length+1,
           physics: PageScrollPhysics(),
           itemBuilder: (context, page) {
             return Stack(
-              children: <Widget>[
-                Center(child:_EditBlockTower(widget.dayList[page])),
+              children: page < widget.dayList.length ? <Widget>[
+                Center(
+                   child:_EditBlockTower(widget.dayList[page])
+                ),
                 Positioned(
                   child: DragTarget(
                     builder: (context, List<Destination>candidateData, rejectedData){
@@ -100,19 +102,38 @@ class _BuildDayPageState extends State<BuildDayPage> {
                     },
                     onAccept: (data){
                       setState(() {
-                        if (widget.dayList[pageIndex].contains(data))
-                          widget.dayList[pageIndex].remove(data);
+                        if (widget.dayList[page].contains(data))
+                          widget.dayList[page].remove(data);
                       });
                     },
                   ),
                   left: 70,
                   bottom: 30,
                 )
-              ],
+              ] :
+                  <Widget>[
+                    Center(
+                      child: _newPage(),
+                    )
+                  ]
             );
           },
         ),
       ],
+    );
+  }
+  Widget _newPage() {
+    return Container(
+      child: Center(
+        child: RaisedButton(
+          child: Icon(Icons.add) ,//Text('', style: TextStyle(fontSize: 24))
+          onPressed: (){
+            setState(() {
+              widget.dayList.add([]);
+            });
+          },
+        ),
+      ),
     );
   }
 }
