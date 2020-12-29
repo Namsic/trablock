@@ -36,11 +36,12 @@ class EditPlanRoute extends StatelessWidget {
                 child: Card(child: Text('block'),),
                 feedback: Card(child: Text('block'),),
                 childWhenDragging: Container(),
-                data: Destination('name'),
+                data: Destination('name') as Insertable,
               ),
               Draggable(
                 child: Card(child: Text('time'),),
                 feedback: Card(child: Text('time'),),
+                data: TimeTag(time: '11:00') as Insertable,
               ),
             ],
           ),
@@ -86,33 +87,10 @@ class _BuildDayPageState extends State<BuildDayPage> {
           itemCount: widget.dayList.length+1,
           physics: PageScrollPhysics(),
           itemBuilder: (context, page) {
-            return Stack(
-              children: page < widget.dayList.length ? <Widget>[
-                Center(
-                   child:BlockTower(destinationList: widget.dayList[page], onEditMode: true,)
-                ),
-                Positioned(
-                  child: DragTarget(
-                    builder: (context, List<Destination>candidateData, rejectedData){
-                      return Container(width: 70, height: 70, color: Colors.red,);
-                    },
-                    onAccept: (data){
-                      setState(() {
-                        if (widget.dayList[page].contains(data))
-                          widget.dayList[page].remove(data);
-                      });
-                    },
-                  ),
-                  left: 70,
-                  bottom: 30,
-                )
-              ] :
-                  <Widget>[
-                    Center(
-                      child: _newPage(),
-                    )
-                  ]
-            );
+            if (page < widget.dayList.length)
+              return BlockTower(destinationList: widget.dayList[page], onEditMode: true,);
+            else
+              return Center(child: _newPage());
           },
         ),
       ],
@@ -164,6 +142,7 @@ class _BlockTowerState extends State<BlockTower> {
   final List<Widget> _intervalList = [];
 
   int _onWillAcceptIndex = -1;
+  bool _onDrag = false;
 
   @override
   Widget build(BuildContext context) {
@@ -196,14 +175,48 @@ class _BlockTowerState extends State<BlockTower> {
         child: _makeBlock(index: i),
         feedback: _makeBlock(index: i),
         childWhenDragging: Container(),
-        data: widget._destinationList[i],
+        data: widget._destinationList[i] as Insertable,
+        onDragStarted: () {
+          setState(() {
+            _onDrag = true;
+          });
+        },
+        onDragEnd: (details) {
+          setState(() {
+            _onDrag = false;
+          });
+        },
       ));
     }
     result.add(_makeInterval(index: widget._destinationList.length));
 
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: result
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: result
+        ),
+        // Remove_bar
+        DragTarget(
+          builder: (context, List<Insertable> candidateData, rejectedData){
+            return Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    height: _onDrag ? 50 : 0,
+                    color: Colors.red,
+                  )
+                )
+              ]
+            );
+          },
+          onAccept: (data){
+            if (widget._destinationList.contains(data))
+              widget._destinationList.remove(data);
+          },
+        )
+      ],
     );
   }
 
@@ -220,7 +233,7 @@ class _BlockTowerState extends State<BlockTower> {
   Widget _makeInterval({@required final int index}){
     // 블럭 사이 공간에 넣을 DragTarget
     return DragTarget(
-      builder: (context, List<Destination> candidateData, rejectData){
+      builder: (context, List<Insertable> candidateData, rejectData){
         return Container(
           width: _blockWidth,
           height: _onWillAcceptIndex == index
@@ -237,19 +250,24 @@ class _BlockTowerState extends State<BlockTower> {
         _onWillAcceptIndex = -1;
       },
       onAccept: (data){
-        setState(() {
-          if (widget._destinationList.contains(data)){
-            int position = widget._destinationList.indexOf(data);
-            widget._destinationList.removeAt(position);
-            index > position
-                ? widget._destinationList.insert(index - 1, data)
-                : widget._destinationList.insert(index, data);
-          }
-          else {
-            widget._destinationList.insert(index, data);
-          }
-          _onWillAcceptIndex = -1;
-        });
+        if (data.runtimeType == Destination) {
+          setState(() {
+            if (widget._destinationList.contains(data)) {
+              int position = widget._destinationList.indexOf(data);
+              widget._destinationList.removeAt(position);
+              index > position
+                  ? widget._destinationList.insert(index - 1, data)
+                  : widget._destinationList.insert(index, data);
+            }
+            else {
+              widget._destinationList.insert(index, data);
+            }
+            _onWillAcceptIndex = -1;
+          });
+        }
+        else if(data.runtimeType == TimeTag){
+          print('TT');
+        }
       },
     );
   }

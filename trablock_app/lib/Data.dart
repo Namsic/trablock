@@ -1,7 +1,7 @@
-// 테스트용
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 Travel _testTravel(){
+  // 테스트용
   Travel res = Travel('test');
   res.days = [[Destination('aaaa'), Destination('bbbb')],[Destination('Seoul'),Destination('Busan')]];
   return res;
@@ -17,7 +17,11 @@ class Travel {
   Travel(this.title);
 }
 
-class Destination {
+class Insertable {
+  // 블럭 사이에 입력 가능한 객체
+}
+
+class Destination extends Insertable{
   // 각각의 여행지.
   String name;
   String address;
@@ -25,7 +29,7 @@ class Destination {
   Destination(this.name);
 }
 
-class TimeTag{
+class TimeTag extends Insertable{
   // Destination 시작과 끝의 시간 정보(Optional)
   String time0;
   String time1;
