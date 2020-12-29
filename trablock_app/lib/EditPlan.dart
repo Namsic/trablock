@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trablock_app/Data.dart';
 
-class EditPlanRoute extends StatefulWidget {
+class EditPlanRoute extends StatelessWidget {
   static final routeName = '/edit';
-  @override
-  _EditPlanRouteState createState() => _EditPlanRouteState();
-}
 
-class _EditPlanRouteState extends State<EditPlanRoute> {
   @override
   Widget build(BuildContext context) {
     Travel _travel = ModalRoute.of(context).settings.arguments;
@@ -93,7 +89,7 @@ class _BuildDayPageState extends State<BuildDayPage> {
             return Stack(
               children: page < widget.dayList.length ? <Widget>[
                 Center(
-                   child:_EditBlockTower(widget.dayList[page])
+                   child:BlockTower(destinationList: widget.dayList[page], onEditMode: true,)
                 ),
                 Positioned(
                   child: DragTarget(
@@ -139,16 +135,27 @@ class _BuildDayPageState extends State<BuildDayPage> {
 }
 
 
-class _EditBlockTower extends StatefulWidget {
+class BlockTower extends StatefulWidget {
+  // Destination, TimeTag 정보를 위젯으로 변환
+  /* input:
+   * List<Destination> _destinationList
+     - required
+     - 현재 계획중인 목적지 및 그 순서 정보 포함
+   * bool onEditMode
+     - optional(default: false)
+     - 드래그 등을 통한 수정 가능 여부
+   */
   final List<Destination> _destinationList;
+  final bool _onEditMode;
 
-  _EditBlockTower(this._destinationList);
+  BlockTower({@required List<Destination> destinationList, onEditMode: false})
+      : _destinationList = destinationList, _onEditMode = onEditMode;
 
   @override
-  _EditBlockTowerState createState() => _EditBlockTowerState();
+  _BlockTowerState createState() => _BlockTowerState();
 }
 
-class _EditBlockTowerState extends State<_EditBlockTower> {
+class _BlockTowerState extends State<BlockTower> {
   static final double _blockWidth = 200;
   static final double _blockHeight = 60;
   static final double _intervalHeight = 20;
@@ -160,42 +167,58 @@ class _EditBlockTowerState extends State<_EditBlockTower> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> result = [];
-    _intervalList.clear();
+    if (widget._onEditMode)
+      return _buildEditBlockTower();
+    return _buildBlockTower();
+  }
 
-   for(int i=0; i<widget._destinationList.length; i++){
-      result.add(_makeInterval(index: i));
+  Widget _buildBlockTower() {
+    // 상호작용 불가능한 BlockTower
+    List<Widget> result = [];
+
+    for(int i=0; i<widget._destinationList.length; i++) {
       result.add(_makeBlock(index: i));
     }
-   result.add(_makeInterval(index: widget._destinationList.length));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: result
+      children: result,
+    );
+  }
+  Widget _buildEditBlockTower(){
+    // 드래그 및 수정 가능한 BlockTower
+    List<Widget> result = [];
+    _intervalList.clear();
+
+    for(int i=0; i<widget._destinationList.length; i++){
+      result.add(_makeInterval(index: i));
+      result.add(Draggable(
+        child: _makeBlock(index: i),
+        feedback: _makeBlock(index: i),
+        childWhenDragging: Container(),
+        data: widget._destinationList[i],
+      ));
+    }
+    result.add(_makeInterval(index: widget._destinationList.length));
+
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: result
     );
   }
 
-  // 블럭 Draggable return
   Widget _makeBlock({@required final int index}){
-    return Draggable(
-      child: Container(
+    // 블럭 Widget
+    Destination des = widget._destinationList[index];
+    return Container(
         width: _blockWidth,
         height: _blockHeight,
         color: Colors.orange,
-        child: Text(widget._destinationList[index].name),
-      ),
-      feedback: Container(
-        width: _blockWidth,
-        height: _blockHeight,
-        color: Colors.orange,
-        child: Text(widget._destinationList[index].name),
-      ),
-      childWhenDragging: Container(),
-      data: widget._destinationList[index],
-    );
+        child: Text(des.name),
+      );
   }
-  // 틈 DragTarget return
   Widget _makeInterval({@required final int index}){
+    // 블럭 사이 공간에 넣을 DragTarget
     return DragTarget(
       builder: (context, List<Destination> candidateData, rejectData){
         return Container(

@@ -11,7 +11,6 @@ class ShowPlanRoute extends StatefulWidget {
 }
 
 class _ShowPlanRouteState extends State<ShowPlanRoute> {
-  List<String> pageview = ["1일차", "2일차", "3일차"];// String 리스트 대신 BlockTower의 리스트가 들어가 있어야 함.
   PageController controller;
   int pageInitIndex = 0;
   @override
@@ -49,11 +48,16 @@ class _ShowPlanRouteState extends State<ShowPlanRoute> {
               return Center(
                 child: Container(
                   color: Colors.amber,
-                  child: Text(pageview[page]),
+                  child: Column(
+                    children: <Widget>[
+                      Text((page+1).toString() + "일차"),
+                      BlockTower(destinationList: _travel.days[page]),
+                    ]
+                  ),
                 ),
               );
             },
-            itemCount: 3,
+            itemCount: _travel.days.length,
             controller: controller,
           ),
         ],
