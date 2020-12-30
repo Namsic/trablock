@@ -13,7 +13,6 @@ class Travel {
   // 각각의 여행. Destination, TimeTag 정보를 포함한다.
   String title;
   List<List<Destination>> days = [];
-
   Travel(this.title);
 }
 
