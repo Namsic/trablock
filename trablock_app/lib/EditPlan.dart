@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trablock_app/Data.dart';
 
 class EditPlanRoute extends StatelessWidget {
-  static final routeName = '/edit';
+  static final String routeName = '/edit';
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +236,10 @@ class _BlockTowerState extends State<BlockTower> {
         switch (data.runtimeType) {
           case Destination:
             setState(() {
-              if (widget == _onDragWidget) {
+              if (_onDragWidget == null){
+                // 새 블럭을 추가하는 경우
+                widget._destinationList.insert(index, data);
+              } else if (_onDragWidget == widget) {
                 // 도달한 부분 일자와 출발한 부분 일자가 동일한 경우
                 int position = _onDragWidget._destinationList.indexOf(data);
                 _onDragWidget._destinationList.removeAt(position);
