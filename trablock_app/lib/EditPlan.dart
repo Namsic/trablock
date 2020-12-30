@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trablock_app/Data.dart';
-import 'package:page_view_indicators/page_view_indicators.dart';
 
 class EditPlanRoute extends StatelessWidget {
   static final routeName = '/edit';
@@ -65,8 +64,9 @@ class _BuildDayPageState extends State<BuildDayPage> {
   PageController controller;
   int pageStartIndex = 0;
   final _currentPageNotifier = ValueNotifier<int>(0);
-  final double _dotSize = 12;
-  final double _selectedDotSize = 15;
+  final double _boxSize = 60;
+  final double _selectedBoxSize = 80;
+  List<Widget> boxList = [];
   
   @override
   void initState() {
@@ -88,7 +88,9 @@ class _BuildDayPageState extends State<BuildDayPage> {
           itemCount: widget.travel.days.length+1,
           physics: PageScrollPhysics(),
           onPageChanged: (int index){
-            _currentPageNotifier.value = index;
+            setState(() {
+              _currentPageNotifier.value = index;
+            });
           },
           itemBuilder: (context, page) {
             if (page < widget.travel.days.length) {
@@ -96,7 +98,7 @@ class _BuildDayPageState extends State<BuildDayPage> {
                 children: <Widget>[
                   BlockTower(
                   destinationList: widget.travel.days[page], onEditMode: true,),
-                  _buildCircleIndicator()
+                  _dayBoxIndicator()
                 ]
               );
             }
@@ -121,23 +123,41 @@ class _BuildDayPageState extends State<BuildDayPage> {
       ),
     );
   }
-  _buildCircleIndicator() {
-    return Positioned(
-      left: 0.0,
-      right: 0.0,
-      bottom: 0.0,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CirclePageIndicator(
-          size: _dotSize,
-          selectedSize: _selectedDotSize,
-          itemCount: widget.travel.days.length,
-          currentPageNotifier: _currentPageNotifier,
-        ),
-      ),
+
+  Widget _dayBoxIndicator(){
+    boxList = [];
+    for (int i = 0; i < widget.travel.days.length; i++){
+      _buildDayBox(i);
+      boxList.add(Container(height: _boxSize, width: _boxSize,));
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: boxList,
     );
   }
 
+  _buildDayBox(int index){
+    if(_currentPageNotifier.value == index) {
+      boxList.add(
+          Container(
+            height: _selectedBoxSize,
+            width: _selectedBoxSize,
+            color: Colors.red,
+            child: Text('${index + 1}일'),
+          )
+      );
+    }
+    else{
+      boxList.add(
+          Container(
+            height: _boxSize,
+            width: _boxSize,
+            color: Colors.grey,
+            child: Text('${index + 1}일'),
+          )
+      );
+    }
+  }
 }
 
 
