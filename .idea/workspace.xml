@@ -23,20 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2cafd32d-8a38-40b6-8dce-8e6114378321" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/trablock_app/lib/ShowMap.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trablock_app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/trablock_app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trablock_app/lib/EditPlan.dart" beforeDir="false" afterPath="$PROJECT_DIR$/trablock_app/lib/EditPlan.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trablock_app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/trablock_app/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trablock_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/trablock_app/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trablock_app/lib/ShowMap.dart" beforeDir="false" afterPath="$PROJECT_DIR$/trablock_app/lib/ShowMap.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_API_30]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
