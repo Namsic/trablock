@@ -14,20 +14,15 @@ class EditPlanRoute extends StatelessWidget {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-           //IndexedStack(
-           //  index: dayIndex,
-           //  children: <Widget>[
-           //    PageView.builder(
-           //      itemBuilder: (context, page) {
-           //        return Expanded(
-           //          child: EditBlockTower(myDestinationList),
-           //        );
-           //      },
-           //    )
-           //  ],
-          // ),
           Expanded(
-            child: BuildDayPage(_travel.days),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: BuildDayPage(_travel),
+                ),
+              ]
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,17 +41,19 @@ class EditPlanRoute extends StatelessWidget {
             ],
           ),
         ],
-      )
+      ),
+
     );
   }
 }
+
 
 class BuildDayPage extends StatefulWidget {
   //여행날짜와 여행지 리스트를 입력받으면 그에 해당하는 viewpage를 생성하는 클래스
   //input : List<List<Destination>> 날짜별 여행지 목록
   //output : 좌우로 넘길 수 있는 ViewPage 위젯
-  final List<List<Destination>> dayList;
-  BuildDayPage(this.dayList);
+  final Travel travel;
+  BuildDayPage(this.travel);
 
 
   @override
@@ -66,6 +63,10 @@ class BuildDayPage extends StatefulWidget {
 class _BuildDayPageState extends State<BuildDayPage> {
   PageController controller;
   int pageStartIndex = 0;
+  final _currentPageNotifier = ValueNotifier<int>(0);
+  final double _boxSize = 60;
+  final double _selectedBoxSize = 80;
+  List<Widget> boxList = [];
   
   @override
   void initState() {
@@ -84,11 +85,23 @@ class _BuildDayPageState extends State<BuildDayPage> {
       index: pageStartIndex,
       children: <Widget>[
         PageView.builder(
-          itemCount: widget.dayList.length+1,
+          itemCount: widget.travel.days.length+1,
           physics: PageScrollPhysics(),
+          onPageChanged: (int index){
+            setState(() {
+              _currentPageNotifier.value = index;
+            });
+          },
           itemBuilder: (context, page) {
-            if (page < widget.dayList.length)
-              return BlockTower(destinationList: widget.dayList[page], onEditMode: true,);
+            if (page < widget.travel.days.length) {
+              return Stack(
+                children: <Widget>[
+                  BlockTower(
+                  destinationList: widget.travel.days[page], onEditMode: true,),
+                  _dayBoxIndicator()
+                ]
+              );
+            }
             else
               return Center(child: _newPage());
           },
@@ -103,12 +116,47 @@ class _BuildDayPageState extends State<BuildDayPage> {
           child: Icon(Icons.add) ,//Text('', style: TextStyle(fontSize: 24))
           onPressed: (){
             setState(() {
-              widget.dayList.add([]);
+              widget.travel.days.add([]);
             });
           },
         ),
       ),
     );
+  }
+
+  Widget _dayBoxIndicator(){
+    boxList = [];
+    for (int i = 0; i < widget.travel.days.length; i++){
+      _buildDayBox(i);
+      boxList.add(Container(height: _boxSize, width: _boxSize,));
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: boxList,
+    );
+  }
+
+  _buildDayBox(int index){
+    if(_currentPageNotifier.value == index) {
+      boxList.add(
+          Container(
+            height: _selectedBoxSize,
+            width: _selectedBoxSize,
+            color: Colors.red,
+            child: Text('${index + 1}일'),
+          )
+      );
+    }
+    else{
+      boxList.add(
+          Container(
+            height: _boxSize,
+            width: _boxSize,
+            color: Colors.grey,
+            child: Text('${index + 1}일'),
+          )
+      );
+    }
   }
 }
 
