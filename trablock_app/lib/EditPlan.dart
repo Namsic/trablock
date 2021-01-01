@@ -3,6 +3,7 @@ import 'package:trablock_app/Data.dart';
 
 class EditPlanRoute extends StatelessWidget {
   static final routeName = '/edit';
+  //static final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(0) ;
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +124,6 @@ class _BuildDayPageState extends State<BuildDayPage> {
       ),
     );
   }
-
   Widget _dayBoxIndicator(){
     boxList = [];
     for (int i = 0; i < widget.travel.days.length; i++){
@@ -135,7 +135,6 @@ class _BuildDayPageState extends State<BuildDayPage> {
       children: boxList,
     );
   }
-
   _buildDayBox(int index){
     if(_currentPageNotifier.value == index) {
       boxList.add(
