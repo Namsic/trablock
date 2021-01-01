@@ -10,9 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: MyHomePage.routeName,
+      initialRoute: MainRoute.routeName,
       routes: {
-        MyHomePage.routeName: (context) => MyHomePage(),
+        MainRoute.routeName: (context) => MainRoute(),
         ShowPlanRoute.routeName: (context) => ShowPlanRoute(),
         EditPlanRoute.routeName: (context) => EditPlanRoute(),
       },
@@ -21,14 +21,14 @@ class MyApp extends StatelessWidget {
 }
 
 // MyHomePage 대신 다른 이름 필요성 느낌
-class MyHomePage extends StatefulWidget {
-  int travelCount = 0;
-  static final routeName = '/';
+class MainRoute extends StatefulWidget {
+  static final String routeName = '/';
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainRouteState createState() => _MainRouteState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainRouteState extends State<MainRoute> {
   String _travelName = '';
 
   @override

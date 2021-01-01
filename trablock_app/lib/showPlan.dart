@@ -5,7 +5,8 @@ import 'package:trablock_app/EditPlan.dart';
 // 메인화면에서 각 계획 클릭시 나타날 화면. 작성된 계획을 보기 편하게 보여줘야 할듯
 
 class ShowPlanRoute extends StatefulWidget {
-  static final routeName = '/show';
+  static final String routeName = '/show';
+
   @override
   _ShowPlanRouteState createState() => _ShowPlanRouteState();
 }
