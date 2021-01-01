@@ -227,12 +227,32 @@ class _BlockTowerState extends State<BlockTower> {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
-        Column(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: result
+          children: [
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: result
+            ),
+            _buildTimeTagColumn(),
+          ],
         ),
         _makeRemoveBar(),
       ],
+    );
+  }
+  Widget _buildTimeTagColumn(){
+    List<Widget> result = [];
+
+    for(int i=0; i<=widget._destinationList.length; i++)
+      result.add(Container(width: 10, height: _intervalHeight, color: Colors.black12,));
+
+    return Container(
+      height: (_blockHeight + _intervalHeight) * widget._destinationList.length + _intervalHeight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: result,
+      ),
     );
   }
 
@@ -247,7 +267,7 @@ class _BlockTowerState extends State<BlockTower> {
       );
   }
   Widget _makeTimeTag(){
-    return Container();
+    return Container(width: 60, height: 40,);
   }
   Widget _makeInterval({@required final int index}){
     // 블럭 사이 공간에 넣을 DragTarget
@@ -296,6 +316,7 @@ class _BlockTowerState extends State<BlockTower> {
       },
     );
   }
+
   static Widget _makeRemoveBar(){
     return DragTarget(
       builder: (context, List<Insertable> candidateData, rejectedData){
