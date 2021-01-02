@@ -21,15 +21,7 @@ class _EditPlanRouteState extends State<EditPlanRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _BuildDayPageState._dayBoxIndicator(_travel),
-                Expanded(
-                  child: BuildDayPage(_travel, this),
-                ),
-              ]
-            ),
+            child:  BuildDayPage(_travel, this),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,8 +64,12 @@ class _BuildDayPageState extends State<BuildDayPage> {
   static PageController _controller;
   static final int pageStartIndex = 0;
   static int _currentPage = 0;
-  static final double _boxSize = 60;
-  static final double _selectedBoxSize = 80;
+  static final double _boxSize = 40;
+  static final double _intervalSize = 40;
+  static final double _intervalSizeWide = 80;
+  static int _onWillAcceptIndex = -1;
+
+  static BuildDayPage _onDragWidget;
 
   @override
   void initState() {
@@ -88,6 +84,18 @@ class _BuildDayPageState extends State<BuildDayPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        _dayBoxIndicator(),
+        Expanded(
+          child: _setDayPage(),
+        ),
+      ],
+    );
+  }
+
+  Widget _setDayPage(){
     return IndexedStack(
       index: pageStartIndex,
       children: <Widget>[
@@ -102,9 +110,9 @@ class _BuildDayPageState extends State<BuildDayPage> {
           itemBuilder: (context, page) {
             if (page < widget.travel.days.length) {
               return Stack(
-                children: <Widget>[
-                  BlockTower(destinationList: widget.travel.days[page], onEditMode: true,),
-                ]
+                  children: <Widget>[
+                    BlockTower(destinationList: widget.travel.days[page], onEditMode: true,),
+                  ]
               );
             }
             else
@@ -114,6 +122,7 @@ class _BuildDayPageState extends State<BuildDayPage> {
       ],
     );
   }
+
   Widget _newPage() {
     return Container(
       child: Center(
@@ -129,21 +138,75 @@ class _BuildDayPageState extends State<BuildDayPage> {
     );
   }
 
-  static Widget _dayBoxIndicator(Travel travel){
+  Widget _dayBoxIndicator(){
     List<Widget> res = [];
-    for (int i = 0; i < travel.days.length; i++){
+    for (int i = 0; i < widget.travel.days.length; i++){
+      res.add(_makeInvert(index : i));
       res.add(
-        Container(
-          width: _currentPage == i ? _selectedBoxSize : _boxSize,
-          height: _currentPage == i ? _selectedBoxSize : _boxSize,
-          color: _currentPage == i ? Colors.red : Colors.grey,
-        )
+        Draggable(
+          child: _makeBox(i),
+          feedback: _makeBox(i),
+          childWhenDragging: Container(),
+          data: widget.travel.days[i],
+          onDragStarted: () {
+            setState(() {
+              _onDragWidget = widget;
+            });
+          },
+          onDragEnd: (details) {
+            setState(() {
+              _onDragWidget= null;
+            });
+          },
+        ),
       );
-      res.add(Container(height: _boxSize, width: _boxSize,));
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: res,
+    res.add(_makeInvert(index: widget.travel.days.length));
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: res,
+      )
+    );
+  }
+
+  Widget _makeBox(int index){
+    return Container(
+      width: _boxSize,
+      height: _boxSize,
+      color: _currentPage == index ? Colors.red : Colors.grey,
+      child: Text("${index+1}일차"),
+    );
+  }
+
+  Widget _makeInvert({@required final int index}){
+    return DragTarget(
+      builder: (context, List<List<Destination>> candidateData, rejectedData){
+        return Container(
+          width: _onWillAcceptIndex == index ? _intervalSizeWide : _intervalSize,
+          height: _boxSize,
+          color: Colors.black,
+        );
+      },
+      onWillAccept: (data){
+        _onWillAcceptIndex = index;
+        return true;
+      },
+      onLeave: (data){
+        _onWillAcceptIndex = -1;
+      },
+      onAccept: (data){
+        setState(() {
+          int position = _onDragWidget.travel.days.indexOf(data);
+          _onDragWidget.travel.days.remove(data);
+          index > position
+              ? widget.travel.days.insert(index - 1, data)
+              : widget.travel.days.insert(index, data);
+
+          _onWillAcceptIndex = -1;
+        });
+      },
     );
   }
 }
